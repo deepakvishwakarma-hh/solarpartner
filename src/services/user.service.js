@@ -1,6 +1,19 @@
 const httpStatus = require('http-status');
-const { User } = require('../models');
+const { User, Staff } = require('../models');
 const ApiError = require('../utils/ApiError');
+
+/**
+ * Create a staff
+ * @param {Object} staffBody
+ * @returns {Promise<User>}
+ */
+const createStaff = async (staffBody) => {
+  // todo -  we need to connect role to role group and assign to staff
+  if (await Staff.isMobileTaken(staffBody.mobile)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Mobile already taken');
+  }
+  return Staff.create(staffBody);
+};
 
 /**
  * Create a user
@@ -80,6 +93,7 @@ const deleteUserById = async (userId) => {
 };
 
 module.exports = {
+  createStaff,
   createUser,
   queryUsers,
   getUserById,
